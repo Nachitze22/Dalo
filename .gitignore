@@ -1,2 +1,5 @@
 #ENV
 .env
+venv/, __pycache__/
+.pyc, dalo.db, session.json, .idea/
+.spec
