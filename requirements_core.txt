@@ -1,0 +1,9 @@
+customtkinter
+pillow
+pywinstyles
+requests
+python-dotenv
+bcrypt
+phonenumbers
+cloudinary
+better-profanity

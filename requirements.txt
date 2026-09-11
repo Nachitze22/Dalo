@@ -1,0 +1,54 @@
+# ============================================================
+#  Dalo — Dependencias del proyecto
+#  Instalar con: instalar.bat (recomendado) o manualmente:
+#    pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+#    pip install -r requirements.txt
+#
+#  NOTA: torch y torchvision NO están listados acá a propósito.
+#  Si los instalás con "pip install -r requirements.txt" a secas,
+#  pip baja la build con soporte CUDA (~1.5-2 GB de más, inútil
+#  sin GPU dedicada). instalar.bat ya los instala aparte con la
+#  build CPU-only, mucho más liviana.
+# ============================================================
+
+# ---- UI ----
+customtkinter
+pillow
+pywinstyles          # estilos nativos de ventana en Windows (mica/acrylic)
+
+# ---- Red / DB ----
+requests
+python-dotenv
+
+# ---- Auth / seguridad ----
+bcrypt
+
+# ---- Validación de teléfonos ----
+phonenumbers
+
+# ---- Imágenes (Cloudinary) ----
+cloudinary
+
+# ---- IA: filtro de lenguaje (palabras) ----
+better-profanity
+
+# ============================================================
+#  Opcionales — el código ya maneja su ausencia con try/except,
+#  pero sin ellas se pierde funcionalidad puntual:
+# ============================================================
+
+# Detección de odio en comentarios/publicaciones (ia.py)
+# Ya depende de torch (instalado aparte) por dentro; el modelo en sí
+# (~400-600 MB) se descarga solo la primera vez que se usa, no acá.
+pysentimiento
+
+# Quitar fondo de fotos de producto en el wizard de venta (paso_fotos.py)
+# El modelo u2net (~176 MB) se descarga solo la primera vez que se usa.
+rembg[cpu]
+
+# Captura por cámara en el wizard de venta (paso_fotos.py, subida_imagenes_vender.py)
+# Versión "headless": sin los binarios de GUI de OpenCV, que Dalo no usa.
+opencv-python-headless
+
+# Arrastrar y soltar imágenes (vista_cuenta.py)
+tkinterdnd2
