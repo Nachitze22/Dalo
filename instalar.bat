@@ -32,17 +32,39 @@ if !PYTHON_OK!==0 (
     )
 
     echo Instalando Python en segundo plano ^(silencioso^)...
-    "%PY_INSTALLER%" /quiet InstallAllUsers=0 PrependPath=1 Include_launcher=1 Include_test=0
+    REM Se usa "start /wait" en vez de invocar el .exe directo: el instalador
+    REM oficial de Python (motor WiX Burn) a veces devuelve el control a la
+    REM terminal ANTES de terminar de instalar de verdad en background, aun
+    REM con /quiet. "start /wait" fuerza a esperar a que el proceso termine
+    REM por completo antes de seguir.
+    start /wait "" "%PY_INSTALLER%" /quiet InstallAllUsers=0 PrependPath=1 Include_launcher=1 Include_test=0
     del "%PY_INSTALLER%" >nul 2>nul
 
     REM Refrescar PATH de la sesion actual
     set "PATH=%LOCALAPPDATA%\Programs\Python\Python312;%LOCALAPPDATA%\Programs\Python\Python312\Scripts;%PATH%"
 
-    where python >nul 2>nul
-    if !errorlevel! neq 0 (
+    echo Verificando que Python haya quedado instalado...
+    set PYTHON_LISTO=0
+    for /l %%i in (1,1,24) do (
+        where python >nul 2>nul
+        if !errorlevel!==0 (
+            set PYTHON_LISTO=1
+            goto :python_verificado
+        )
+        REM "ping" como truco de espera de ~5s sin depender de "timeout"
+        REM (timeout falla en algunas terminales sin consola interactiva)
+        ping -n 6 127.0.0.1 >nul
+        REM Por si el instalador tardo en escribir el registro, se
+        REM refresca el PATH en cada intento
+        set "PATH=%LOCALAPPDATA%\Programs\Python\Python312;%LOCALAPPDATA%\Programs\Python\Python312\Scripts;%PATH%"
+    )
+    :python_verificado
+
+    if !PYTHON_LISTO!==0 (
         echo.
-        echo ERROR: Python se instalo pero no se detecta en el PATH.
-        echo Cerra esta ventana, abri una consola nueva y volve a correr instalar.bat
+        echo ERROR: Python se instalo pero no se pudo confirmar despues de
+        echo esperar 2 minutos. Cerra esta ventana, abri una consola nueva
+        echo y volve a correr instalar.bat
         pause
         exit /b 1
     )
