@@ -1,0 +1,17 @@
+# ENV
+.env
+
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Private / local files
+dalo.db
+session.json
+
+# IDE
+.idea/
+
+# Build
+*.spec
